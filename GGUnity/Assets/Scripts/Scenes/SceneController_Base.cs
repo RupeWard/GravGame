@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+using RJWS.Core.Data;
+
 abstract public class SceneController_Base : MonoBehaviour 
 {
 	abstract public SceneManager.EScene Scene ();
