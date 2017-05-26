@@ -2,6 +2,7 @@
 using System.Collections;
 
 using RJWS.Core.Data;
+using RJWS.GravGame;
 
 abstract public class SceneController_Base : MonoBehaviour 
 {
@@ -59,6 +60,7 @@ abstract public class SceneController_Base : MonoBehaviour
 	// Override in subclasses for set-up
 	protected virtual void OnDatabasesLoaded( )
 	{
+		GravGameManager.CreateInstance( );
 	}
 
 

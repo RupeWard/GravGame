@@ -6,5 +6,9 @@ namespace RJWS.GravGame
 {
 	public class GravGameManager : RJWS.Core.Singleton.SingletonApplicationLifetimeLazy<GravGameManager>
 	{
+		protected override void PostAwake( )
+		{
+			LevelStore.CreateInstance( ); 
+		}
 	}
 }

@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections;
 using RJWS.Core.DebugDescribable;
 
+using RJWS.GravGame;
+
 public class SceneControllerDevSetup: SceneController_Base 
 {
 	#region inspector hooks
@@ -34,6 +36,7 @@ public class SceneControllerDevSetup: SceneController_Base
 	override protected void PostStart()
 	{
 		versionText.text = RJWS.Core.Version.Version.versionNumber.DebugDescribe( );
+
 	}
 
 	override protected void PostAwake()

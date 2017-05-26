@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Mono.Data.Sqlite;
 using System.Data;
+
 using RJWS.Core.Data;
+using RJWS.Core.DebugDescribable;
 
 namespace RJWS.Core.Data
 {
@@ -31,7 +33,7 @@ namespace RJWS.Core.Data
 			{ ColumnType.Vector3, "TEXT" },
 		};
 
-		public abstract class Column
+		public abstract class Column : IDebugDescribable
 		{
 			private SqliteParameter param_ = new SqliteParameter( );
 			public SqliteParameter param
@@ -65,8 +67,17 @@ namespace RJWS.Core.Data
 			{
 				param.Value = value.ToString( );
 			}
+
+			#region IDebugDescribable
+
+			public void DebugDescribe(System.Text.StringBuilder sb)
+			{
+				sb.Append( name ).Append( ":" ).Append( colType );
+			}
+
+			#endregion IDebugDescribable
 		}
-	
+
 		public class TextColumn : Column
 		{
 			public TextColumn( string n ) : base( n, ColumnType.Text )
@@ -162,7 +173,7 @@ namespace RJWS.Core.Data
 	
 		}
 
-		public class Table
+		public class Table: IDebugDescribable
 		{
 			private string name_;
 			private List<Column> columns_ = new List<Column>( );
@@ -239,9 +250,15 @@ namespace RJWS.Core.Data
 						sb.Append( ", " );
 					}
 					sb.Append( columns_[i].name );
+
 				}
 			}
 	
+			public bool CreateIfNecessary( string dbName )
+			{
+				return Create( dbName, false );
+			}
+
 			public bool Create( string dbName, bool bOverwrite )
 			{
 				if (DEBUG_TABLES)
@@ -287,6 +304,21 @@ namespace RJWS.Core.Data
 				return success;
 
 			}
+
+			#region IDebugDescribable
+
+			public void DebugDescribe( System.Text.StringBuilder sb )
+			{
+				sb.Append( "Table '").Append( name_ ).Append("' ").Append( columns_.Count ).Append(" cols");
+				for (int i = 0; i < columns_.Count; i++)
+				{
+					sb.Append( "\n" ).Append( i ).Append( " " );
+					columns_[i].DebugDescribe( sb );
+				}
+			}
+
+			#endregion IDebugDescribable
+
 		}
 	}
 }
