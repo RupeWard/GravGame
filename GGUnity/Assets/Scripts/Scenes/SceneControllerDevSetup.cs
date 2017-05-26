@@ -12,9 +12,9 @@ public class SceneControllerDevSetup: SceneController_Base
 
 	#region event handlers
 
-	public void HandleTestButtonPressed( )
+	public void HandlePlayButtonPressed( )
 	{
-		SceneManager.Instance.SwitchScene( SceneManager.EScene.TestScene);
+		SceneManager.Instance.SwitchScene( SceneManager.EScene.GameScene);
 	}
 
 	public void HandleQuitButtonPressed( )
