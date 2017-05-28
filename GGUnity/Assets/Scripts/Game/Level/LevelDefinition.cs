@@ -16,14 +16,16 @@ namespace RJWS.GravGame
 		public int levelId
 		{
 			get;
-			private set;
+			set;
 		}
 
 		public string levelName
 		{
 			get;
-			private set;
+			set;
 		}
+
+		public Shape.AbstractShapeDefn tmpShapeDefn = null;
 
 		public LevelDefinition() : base ()
 		{
@@ -43,13 +45,24 @@ namespace RJWS.GravGame
 
 		override protected bool _extractFromString( ref string str)
 		{
-			// TODO Implement
-			return true;
+			bool success = false;
+
+			Shape.AbstractShapeDefn asdIn = null;
+			if (Shape.AbstractShapeDefn.ExtractShapeDefn(ref str, ref asdIn, true))
+			{
+				tmpShapeDefn = asdIn;
+				success = true;
+			}
+			else
+			{
+				Debug.LogWarning( "Failed to extract shape defn from '" + str + "'" );
+			}
+			return success;
 		}
 
 		override protected bool _addToString( System.Text.StringBuilder sb )
 		{
-			// TODO Implement
+			Shape.AbstractShapeDefn.WriteShapeDefn( sb, tmpShapeDefn );
 			return true;
 		}
 
@@ -64,7 +77,16 @@ namespace RJWS.GravGame
 
 		public void DebugDescribe( System.Text.StringBuilder sb )
 		{
-			sb.Append( "Level ").Append(levelId).Append(" ("+ levelName + ")" );
+			sb.Append( "[ Level ").Append(levelId).Append(" ("+ levelName + ") " );
+			if (tmpShapeDefn != null)
+			{
+				tmpShapeDefn.DebugDescribe( sb );
+			}
+			else
+			{
+				sb.Append( "NULL TSD" );
+			}
+			sb.Append( "]" );
 		}
 
 		#endregion IDebugDescribable

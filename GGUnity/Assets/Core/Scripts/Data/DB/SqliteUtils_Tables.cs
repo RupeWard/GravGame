@@ -261,9 +261,21 @@ namespace RJWS.Core.Data
 
 			public bool Create( string dbName, bool bOverwrite )
 			{
-				if (DEBUG_TABLES)
+				bool exists = SqliteUtils.Instance.doesTableExist( name_, dbName );
+
+                if (DEBUG_TABLES)
 				{
-					Debug.Log( "Craeting table " + name_ + " in " + dbName );
+					if (exists)
+					{
+						if (bOverwrite)
+						{
+							Debug.Log( "Overwriting table " + name_ + " in " + dbName );
+						}
+					}
+					else
+					{
+						Debug.Log( "Creating new table " + name_ + " in " + dbName );
+					}
 				}
 				bool success = false;
 				SqliteConnection connection = SqliteUtils.Instance.getConnection( dbName );

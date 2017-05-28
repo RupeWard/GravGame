@@ -186,6 +186,183 @@ namespace RJWS.Core.Data
 
 		#endregion Vector2
 
-	}
+		#region Float
 
+		static public bool extractRequiredFloat( ref string str, ref float v )
+		{
+			return extractFloat( ref str, ref v, true );
+		}
+
+		static public bool extractOptionalFloat( ref string str, ref float v )
+		{
+			return extractFloat( ref str, ref v, false );
+		}
+
+		static public bool extractFloat( ref string str, ref float v, bool required )
+		{
+			bool success = false;
+			System.Text.RegularExpressions.Regex regex =
+				new System.Text.RegularExpressions.Regex( @"^(" + FLOAT_REGEX + @")" );
+			System.Text.RegularExpressions.Match match = regex.Match( str );
+			if (match.Success && match.Groups.Count == 2)
+			{
+				string fStr = match.Groups[1].Value;
+				float f;
+				if (float.TryParse( fStr, out f ) )
+				{
+					string prevStr = str;
+					str = str.Replace( fStr, "" );
+					v = f;
+					if (DEBUG_LOCAL)
+					{
+						Debug.Log( "Extracted Float "+v+" from '" + prevStr + " = " + v + "\nRemainder = '" + str + "'" );
+					}
+					success = true;
+				}
+				else
+				{
+					Debug.LogError( "Couldn't parse float from '" + fStr + "' '" );
+				}
+			}
+			else
+			{
+				if (required)
+				{
+					Debug.LogError( "Couldn't parse float from '" + str + "'" );
+				}
+			}
+			return success;
+		}
+
+		#endregion Float
+
+		#region Int
+
+		static public bool extractRequiredInt( ref string str, ref int v )
+		{
+			return extractInt( ref str, ref v, true );
+		}
+
+		static public bool extractOptionalInt( ref string str, ref int v )
+		{
+			return extractInt( ref str, ref v, false );
+		}
+
+		static public bool extractInt( ref string str, ref int v, bool required )
+		{
+			bool success = false;
+			System.Text.RegularExpressions.Regex regex =
+				new System.Text.RegularExpressions.Regex( @"^(\d+)" );
+			System.Text.RegularExpressions.Match match = regex.Match( str );
+			if (match.Success && match.Groups.Count == 2)
+			{
+				string iStr = match.Groups[1].Value;
+				int f;
+				if (int.TryParse( iStr, out f ))
+				{
+					string prevStr = str;
+					str = str.Replace( iStr, "" );
+					v = f;
+					if (DEBUG_LOCAL)
+					{
+						Debug.Log( "Extracted Int "+v+" from '" + prevStr + " = " + v + "\nRemainder = '" + str + "'" );
+					}
+					success = true;
+				}
+				else
+				{
+					Debug.LogError( "Couldn't parse float from '" + iStr + "' '" );
+				}
+			}
+			else
+			{
+				if (required)
+				{
+					Debug.LogError( "Couldn't parse float from '" + str + "'" );
+				}
+			}
+			return success;
+		}
+
+		#endregion int
+
+		#region bool
+
+		static public bool extractRequiredBool( ref string str, ref bool v )
+		{
+			return extractBool( ref str, ref v, true );
+		}
+
+		static public bool extractOptionalBool( ref string str, ref bool v )
+		{
+			return extractBool( ref str, ref v, false );
+		}
+
+		static public bool extractBool( ref string str, ref bool v, bool required )
+		{
+			bool success = false;
+			System.Text.RegularExpressions.Regex regex =
+				new System.Text.RegularExpressions.Regex( @"^(\d+)" );
+			System.Text.RegularExpressions.Match match = regex.Match( str );
+			if (str.StartsWith(true.ToString()))
+			{
+				v = true;
+				string prevStr = str;
+				str = str.Replace( true.ToString(),"" );
+				success = true;
+				if (DEBUG_LOCAL)
+				{
+					Debug.Log( "Extracted Bool " + v + " from '" + prevStr + "\nRemainder = '" + str + "'" );
+				}
+			}
+			else if (str.StartsWith( false.ToString() ))
+			{
+				v = true;
+				string prevStr = str;
+				str = str.Replace( false.ToString(), "" );
+				success = true;
+				if (DEBUG_LOCAL)
+				{
+					Debug.Log( "Extracted Bool " + v + " from '" + prevStr + "\nRemainder = '" + str + "'" );
+				}
+			}
+			else
+			{
+				if (required)
+				{
+					Debug.LogError( "Couldn't parse bool from '" + str + "'" );
+				}
+			}
+			return success;
+		}
+
+		#endregion bool
+
+		#region text
+
+		static public bool extractRequiredText( ref string str, ref string v )
+		{
+			return extractText( ref str, ref v, true );
+		}
+
+		static public bool extractOptionalText( ref string str, ref string v )
+		{
+			return extractText( ref str, ref v, false );
+		}
+
+		static public bool extractText( ref string str, ref string v, bool required )
+		{
+			bool success = false;
+
+			v = str;
+			str = string.Empty;
+			success = true;
+
+			return success;
+		}
+
+#endregion text
+
+
+	}
 }

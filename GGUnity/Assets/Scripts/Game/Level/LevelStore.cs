@@ -18,9 +18,9 @@ namespace RJWS.GravGame
 
 		private Dictionary<int, LevelDefinition> _levels = new Dictionary<int, LevelDefinition>( );
 
-		private SqliteUtils.IntegerColumn IdCol = new SqliteUtils.IntegerColumn( "LevelId" );
-		private SqliteUtils.TextColumn nameCol = new SqliteUtils.TextColumn( "LevelName" );
-		private SqliteUtils.TextColumn defnCol = new SqliteUtils.TextColumn( "Defn" );
+		private SqliteUtils.IntegerColumn _idCol = new SqliteUtils.IntegerColumn( "LevelId" );
+		private SqliteUtils.TextColumn _nameCol = new SqliteUtils.TextColumn( "LevelName" );
+		private SqliteUtils.TextColumn _defnCol = new SqliteUtils.TextColumn( "Defn" );
 
 		private SqliteUtils.Table _table = null;
 
@@ -31,9 +31,9 @@ namespace RJWS.GravGame
 				= new SqliteUtils.Table( "LevelDefn",
 					new List<SqliteUtils.Column>
 					{
-						IdCol,
-						nameCol,
-						defnCol
+						_idCol,
+						_nameCol,
+						_defnCol
 					}
 				);
 			if (_table.CreateIfNecessary( "CoreData"))
@@ -46,12 +46,157 @@ namespace RJWS.GravGame
 
 			// load table
 			LoadAllDefns( true );
+			AddDefaultDefns( );
+		}
 
+		private void AddDefaultDefns()
+		{
+			if (_levels.Count == 0 )
+			{
+				LevelDefinition level0 = new LevelDefinition( 0, "L0" );
+				level0.tmpShapeDefn = new Shape.CircleShapeDefn( 5f );
+
+				AddDefnWithNextHighId( level0 );
+
+				if (DEBUG_LevelStore)
+				{
+					Debug.LogWarning( "Added Default Defns\n" + this.DebugDescribe( ) );
+				}
+			}
+		}
+
+		private int GetNextFreeId()
+		{
+			int result = -1;
+			
+			for (int i = 0; ; i++)
+			{ 
+				if (! _levels.ContainsKey( i ))
+				{
+					result = i;
+					break;
+				}
+			}
+			return result;
+		}
+
+		private int GetHighestId( )
+		{
+			int result = -1;
+
+			foreach (int i in _levels.Keys)
+			{
+				if (i > result)
+				{
+					result = i;
+				}
+			}
+			return result;
+		}
+
+		public bool AddDefnWithNextFreeId( LevelDefinition ld )
+		{
+			ld.levelId = GetNextFreeId( );
+			return AddDefn( ld, false );
+		}
+
+		public bool AddDefnWithNextHighId( LevelDefinition ld )
+		{
+			ld.levelId = GetHighestId()+1;
+			return AddDefn( ld, false );
+		}
+
+		public bool AddDefn(LevelDefinition ld, bool replace)
+		{
+			if (_levels.ContainsKey(ld.levelId))
+			{
+				if (!replace)
+				{
+					Debug.LogWarning( "Refusing to overwrite " + _levels[ld.levelId].DebugDescribe( ) + " with " + ld.DebugDescribe( ) );
+					return false;
+				}
+				_levels[ld.levelId] = ld;
+			}
+			else
+			{
+				_levels.Add( ld.levelId, ld );
+			}
+			SaveDefn( ld, true );
+
+			if (DEBUG_LevelStore)
+			{
+				Debug.LogWarning( "Added Defn\n" + ld.DebugDescribe( )+"\n"+this.DebugDescribe() );
+			}
+
+			return true;
+		}
+
+		public void ReloadAllDefns( )
+		{
+			LoadAllDefns( true );
+		}
+
+		public void SaveAll()
+		{
+			SaveDefns( _levels.Values, true );
+		}
+
+		public void SaveDefn(LevelDefinition ld, bool force)
+		{
+			SqliteConnection connection = SqliteUtils.Instance.getConnection( "CoreData" );
+
+			SqliteCommand insertCommand = connection.CreateCommand( );
+			insertCommand.CommandText = _table.GetInsertCommand( force );
+			_table.AddParamsToCommand( insertCommand );
+
+			_idCol.SetParamValue( ld.levelId );
+			_nameCol.SetParamValue( ld.levelName );
+			System.Text.StringBuilder sb = new System.Text.StringBuilder( );
+			ld.AddToString( sb );
+			_defnCol.SetParamValue( sb.ToString( ) );
+
+			insertCommand.ExecuteNonQuery( );
+			insertCommand.Dispose( );
+
+			if (DEBUG_LevelStore)
+			{
+				Debug.LogWarning( "Saved Defn "+ ld.DebugDescribe( ) );
+			}
+
+		}
+
+		public void SaveDefns( IEnumerable<LevelDefinition> lds, bool force )
+		{
+			{
+				SqliteConnection connection = SqliteUtils.Instance.getConnection( "CoreData" );
+
+				SqliteCommand insertCommand = connection.CreateCommand( );
+				insertCommand.CommandText = _table.GetInsertCommand( force );
+				_table.AddParamsToCommand( insertCommand );
+
+				foreach (LevelDefinition ld in lds)
+				{
+					_idCol.SetParamValue( ld.levelId );
+					_nameCol.SetParamValue( ld.levelName );
+					System.Text.StringBuilder sb = new System.Text.StringBuilder( );
+					ld.AddToString( sb );
+					_defnCol.SetParamValue( sb.ToString( ) );
+
+					insertCommand.ExecuteNonQuery( );
+				}
+				insertCommand.Dispose( );
+			}
+
+			if (DEBUG_LevelStore)
+			{
+				Debug.LogWarning( "Saved All Defns\n" + this.DebugDescribe( ) );
+			}
 
 		}
 
 		public void LoadAllDefns( bool bClearFirst = true )
 		{
+			Debug.Log( "LoadAllDefns" );
 			if (bClearFirst)
 			{
 				_levels.Clear( );
@@ -65,13 +210,16 @@ namespace RJWS.GravGame
 			SqliteDataReader reader = selectCommand.ExecuteReader( );
 			while (reader.Read( ))
 			{
-				int levelId = IdCol.Read( reader, 0 );
-				string levelName = nameCol.Read( reader, 1 );
-				string defnData = defnCol.Read( reader, 2 );
+				int levelId = _idCol.Read( reader, 0 );
+				string levelName = _nameCol.Read( reader, 1 );
+				string defnData = _defnCol.Read( reader, 2 );
 
-				LevelDefinition defn = null;
-				if (defn.ExtractOptionalFromString( ref defnData))
+
+				LevelDefinition defn = new LevelDefinition(levelId, levelName);
+				Debug.Log( "- Loading " + levelId + " " + levelName + " '" + defnData + "'" );
+				if (defn.ExtractRequiredFromString( ref defnData))
 				{
+
 					if (_levels.ContainsKey(levelId))
 					{
 						if (DEBUG_LevelIO)
@@ -94,6 +242,12 @@ namespace RJWS.GravGame
 					Debug.LogError( "Couldn't extract LevelDefinition data from '" + defnData+"'" );
 				}
 			}
+
+			if (DEBUG_LevelStore)
+			{
+				Debug.LogWarning( "Loaded all Defns\n" + this.DebugDescribe( ) );
+			}
+
 		}
 
 		/*

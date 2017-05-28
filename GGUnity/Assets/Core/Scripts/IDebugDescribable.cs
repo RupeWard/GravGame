@@ -11,10 +11,9 @@ namespace RJWS.Core.DebugDescribable
 
 	public static class DebugDescribeExtensions
 	{
-		private static System.Text.StringBuilder sb = new System.Text.StringBuilder( );
 		public static string DebugDescribe( this IDebugDescribable obj )
 		{
-			sb.Length = 0;
+			System.Text.StringBuilder sb = new System.Text.StringBuilder( );
 			obj.DebugDescribe( sb );
 			return sb.ToString( );
 		}
