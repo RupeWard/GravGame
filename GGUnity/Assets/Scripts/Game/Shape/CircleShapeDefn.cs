@@ -51,24 +51,51 @@ namespace RJWS.GravGame.Shape
 
 		#region AbstractStringExtractable
 
-		override protected bool _extractFromString( ref string str )
+		override protected bool _extractFromString( ref string str, ref AbstractShapeDefn result )
 		{
-			Debug.Log( "Extracting circle from '" + str + "'" );
 			bool success = false;
-			if (_radiusExtractor.ExtractFromString(ref str, true ))
+			if (result == null)
 			{
-				Debug.Log( "Extracted radius "+_radiusExtractor.Value );
-				SetRadius( _radiusExtractor.Value );
-				success = true;
+				result = this;
+			}
+			CircleShapeDefn circle = result as CircleShapeDefn;
+			if (circle == null)
+			{
+				Debug.LogError( "NOT A CIRCLE, A " + result.eShapeType );
+			}
+			else
+			{
+				Debug.Log( "Extracting circle from '" + str + "'" );
+				if (_radiusExtractor.ExtractFromString( ref str, true ))
+				{
+					Debug.Log( "Extracted radius " + _radiusExtractor.Value );
+
+					circle.SetRadius( _radiusExtractor.Value );
+					success = true;
+				}
 			}
 			return success;
 		}
 
-		override protected bool _addToString( System.Text.StringBuilder sb )
+		override protected bool _addToString(AbstractShapeDefn target, System.Text.StringBuilder sb )
 		{
-			_radiusExtractor.Value = _radius;
-			_radiusExtractor.AddToString( sb );
-			return true;
+			bool success = false;
+			if (target == null)
+			{
+				target = this;
+			}
+			CircleShapeDefn circle = target as CircleShapeDefn;
+			if (circle == null)
+			{
+				Debug.LogError( "NOT A CIRCLE, A " + target.eShapeType );
+			}
+			else
+			{
+				_radiusExtractor.Value = circle._radius;
+				_radiusExtractor.AddToString( sb );
+				success = true;
+			}
+			return success;
 		}
 
 		protected override bool DebugType( )

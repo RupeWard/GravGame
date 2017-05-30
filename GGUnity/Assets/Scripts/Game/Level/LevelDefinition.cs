@@ -43,14 +43,15 @@ namespace RJWS.GravGame
 
 		#region AbstractStringExtractable
 
-		override protected bool _extractFromString( ref string str)
+		override protected bool _extractFromString( ref string str, ref LevelDefinition result)
 		{
 			bool success = false;
 
+			result = this;
 			Shape.AbstractShapeDefn asdIn = null;
 			if (Shape.AbstractShapeDefn.ExtractShapeDefn(ref str, ref asdIn, true))
 			{
-				tmpShapeDefn = asdIn;
+				result.tmpShapeDefn = asdIn;
 				success = true;
 			}
 			else
@@ -60,9 +61,13 @@ namespace RJWS.GravGame
 			return success;
 		}
 
-		override protected bool _addToString( System.Text.StringBuilder sb )
+		override protected bool _addToString( LevelDefinition target, System.Text.StringBuilder sb )
 		{
-			Shape.AbstractShapeDefn.WriteShapeDefn( sb, tmpShapeDefn );
+			if (target == null)
+			{
+				target = this;
+			}
+			Shape.AbstractShapeDefn.WriteShapeDefn( sb, target.tmpShapeDefn );
 			return true;
 		}
 

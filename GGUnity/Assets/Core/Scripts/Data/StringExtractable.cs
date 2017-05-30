@@ -6,14 +6,27 @@ using RJWS.Core.DebugDescribable;
 
 namespace RJWS.Core.Data
 {
-	public abstract class AbstractStringExtractable<T>
+	public abstract class AbstractStringExtractable< T >
 	{
 		static protected bool DEBUG_AbstractStringExtractable = true;
 
 		abstract protected bool DebugType( );
 
-		abstract protected bool _extractFromString( ref string str);
-		abstract protected bool _addToString( System.Text.StringBuilder sb );
+		protected bool _extractFromString( ref string str)
+		{
+			return _extractFromString( ref str, ref Value );
+		}
+
+		abstract protected bool _extractFromString( ref string str, ref T result);
+
+		protected bool _addToString( System.Text.StringBuilder sb )
+		{
+			return _addToString( Value, sb );
+		}
+		abstract protected bool _addToString( T target, System.Text.StringBuilder sb );
+
+
+		public T Value;
 
 		private string _sep = "{}";
 		private string sep
@@ -239,76 +252,7 @@ namespace RJWS.Core.Data
 					else
 					{
 						string msg = GetType( ) + " Extracted  from '" + prevStr + "'";
-						/*
-						if (_extractFromString( ref contentString ))
-						{
-							//						string prevStr = str;
-							//						str = str.Replace( matchedStr, "" );
-							if (DEBUG_AbstractStringExtractable)
-							{
-								IDebugDescribable dd = this as IDebugDescribable;
-								if (dd != null)
-								{
-									msg = msg + "\n" + dd.DebugDescribe( );
-								}
-								Debug.Log( msg );
-							}
-							success = true;
-						}
-						else
-						{
-							string warningStr = GetType( ) + " Failed to read " + typeof( T ) + " from \n" + contentString;
-							if (required)
-							{
-								throw new System.Exception( warningStr );
-							}
-							else
-							{
-								if (DEBUG_AbstractStringExtractable || DebugType( ))
-								{
-									Debug.LogWarning( warningStr );
-								}
-							}
-						}
-						*/
 					}
-
-					/*
-					string matchedStr = match.Groups[1].Value;
-					string contentStr = match.Groups[2].Value;
-
-					if (_extractFromString( ref contentStr))
-					{
-						string prevStr = str;
-						str = str.Replace( matchedStr, "" );
-						if (DEBUG_AbstractStringExtractable)
-						{
-							string msg = GetType( ) + " Extracted " + typeof( T ) + " from '" + prevStr + "\nContent=" + match.Groups[2].Value + "\nRemainder = '" + str + "'" ;
-							IDebugDescribable dd = this as IDebugDescribable;
-							if (dd != null)
-							{
-								msg = msg + "\n" + dd.DebugDescribe( );
-							}
-							Debug.Log( msg );
-						}
-						success = true;
-					}
-					else
-					{
-						string warningStr = GetType( ) + " Failed to read " + typeof( T ) + " from \n" + match.Groups[2].Value + "\nIn\n" + matchedStr;
-						if (required)
-						{
-							throw new System.Exception( warningStr );
-						}
-						else
-						{
-							if (DEBUG_AbstractStringExtractable || DebugType( ))
-							{
-								Debug.LogWarning( warningStr );
-							}
-						}
-					}
-					*/
 				}
 				else
 				{
@@ -321,15 +265,27 @@ namespace RJWS.Core.Data
 
 	}
 
-	public class TextExtractable: AbstractStringExtractable<TextExtractable>
+	/*
+	public class ListExtractable< TExtractableType >: AbstractStringExtractable<ListExtractable<TExtractableType>>
+	{
+		private string _separator = ",";
+		private int _num = 0;
+
+		public List< >
+	}
+	*/
+
+	public class TextExtractable: AbstractStringExtractable<string>
 	{
 		private static readonly bool DEBUG_TextExtractable = true;
 
+		/*
 		public string Value
 		{
 			get;
 			set;
 		}
+		*/
 
 		public TextExtractable( string v, string sep ) : base( sep )
 		{
@@ -350,33 +306,27 @@ namespace RJWS.Core.Data
 			return DEBUG_TextExtractable || DEBUG_AbstractStringExtractable;
 		}
 	
-		override protected bool _extractFromString( ref string str)
+		override protected bool _extractFromString( ref string str, ref string result)
 		{
 			Debug.Log( "TextExtractor.extractFromString (" + str+ ")" );
-			Value = str;
+			result = str;
 //			str = string.Empty;
 			Debug.Log( "TextExtractor got '" + Value + "'" );
 			return true;
 		}
 
-		override protected bool _addToString( System.Text.StringBuilder sb )
+		override protected bool _addToString( string target, System.Text.StringBuilder sb )
 		{
-			sb.Append( Value );
+			sb.Append( target );
 			return true;
 		}
 
 
 	}
 
-	public class FloatExtractable : AbstractStringExtractable<FloatExtractable>
+	public class FloatExtractable : AbstractStringExtractable<float>
 	{
 		private static readonly bool DEBUG_FloatExtractable = true;
-
-		public float Value
-		{
-			get;
-			set;
-		}
 
 		public FloatExtractable( float v, string sep ) : base( sep )
 		{
@@ -397,15 +347,15 @@ namespace RJWS.Core.Data
 			return DEBUG_FloatExtractable || DEBUG_AbstractStringExtractable;
 		}
 
-		override protected bool _extractFromString( ref string str )
+		override protected bool _extractFromString( ref string str, ref float result )
 		{
 			bool success = false;
 			float parseVal;
 			if (float.TryParse(str, out parseVal))
 			{
 				Debug.Log( "Got float "+parseVal+ " from '" + str + "'" );
-				Value = parseVal;
-//				str = string.Empty;
+				result = parseVal;
+				str = string.Empty;
 				success = true;
 			}
 			else
@@ -415,9 +365,9 @@ namespace RJWS.Core.Data
 			return success;
 		}
 
-		override protected bool _addToString( System.Text.StringBuilder sb )
+		override protected bool _addToString(float target, System.Text.StringBuilder sb )
 		{
-			sb.Append( Value );
+			sb.Append( target );
 			return true;
 		}
 

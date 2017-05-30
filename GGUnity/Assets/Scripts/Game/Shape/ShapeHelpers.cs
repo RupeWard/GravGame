@@ -16,24 +16,18 @@ namespace RJWS.GravGame.Shape
 		Polygon
 	}
 
-	public class ShapeExtractable : AbstractStringExtractable< ShapeExtractable>
+	public class ShapeExtractable : AbstractStringExtractable< EShapeType >
 	{
 		protected static readonly bool DEBUG_ShapeExtractable = true;
 
-		public EShapeType value
-		{
-			get;
-			set;
-		}
-
 		public ShapeExtractable( EShapeType v, string sep ) : base( sep )
 		{
-			value = v;
+			Value = v;
 		}
 
 		public ShapeExtractable( EShapeType v ) : base( )
 		{
-			value = v;
+			Value = v;
 		}
 
 		public ShapeExtractable( ) : base(  )
@@ -45,23 +39,23 @@ namespace RJWS.GravGame.Shape
 			return DEBUG_ShapeExtractable || DEBUG_AbstractStringExtractable;
 		}
 
-		override protected bool _extractFromString(ref string str)
+		override protected bool _extractFromString(ref string str, ref EShapeType result)
 		{
 			bool success = false;
 			EShapeType parseVal = EShapeType.NONE;
 			if (ShapeHelpers.ExtractShapeTypeFromString(ref str, ref parseVal, true))
 			{
-				value = parseVal;
+				result = parseVal;
 				str = str.Replace(parseVal.ToString(),"");
 				success = true;
 			}
 			return success;
 		}
 
-		override protected bool _addToString( System.Text.StringBuilder sb )
+		override protected bool _addToString(EShapeType target, System.Text.StringBuilder sb )
 		{
 			// TODO check if set or not
-			sb.Append( value.ToString() );
+			sb.Append( target.ToString() );
 			return true;
 		}
 
