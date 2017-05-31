@@ -41,7 +41,11 @@ namespace RJWS.GravGame
 		protected override bool _addToString( BlockDefinition target, System.Text.StringBuilder sb )
 		{
 			bool success = false;
-			if (_shapeDefinition == null)
+			if (target == null)
+			{
+				target = this;
+			}
+			if (target._shapeDefinition == null)
 			{
 				Debug.LogWarning( "Null shapeDefn on attempt to addtoString" );
 			}
@@ -50,7 +54,7 @@ namespace RJWS.GravGame
 				_blockPositionInfo.Value = target._blockPositionInfo.Value;
 				_blockPositionInfo.AddToString( sb );
 
-				if (Shape.AbstractShapeDefn.WriteShapeDefn(sb, _shapeDefinition ))
+				if (Shape.AbstractShapeDefn.WriteShapeDefn(sb, target._shapeDefinition ))
 				{
 					success = true;
 				}
@@ -61,6 +65,10 @@ namespace RJWS.GravGame
 		protected override bool _extractFromString( ref string str, ref BlockDefinition result )
 		{
 			bool success = false;
+			if (result == null)
+			{
+				result = this;
+			}
 			if (_blockPositionInfo.ExtractOptionalFromString(ref str ))
 			{
 				result._blockPositionInfo = _blockPositionInfo;

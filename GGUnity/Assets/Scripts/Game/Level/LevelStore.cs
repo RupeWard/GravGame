@@ -51,20 +51,47 @@ namespace RJWS.GravGame
 
 		private void AddTestDefns()
 		{
-			if (_levels.Count < 2 )
+			if (_levels.Count < 3 )
 			{
-				LevelDefinition level0 = new LevelDefinition( 0, "L0" );
-				level0.tmpShapeDefn = new Shape.CircleShapeDefn( 5f );
+				if (GetLevelFromName("L0") != null)
+				{
+					Debug.LogWarning( "Not overrwiting L0" );
+				}
+				else
+				{
+					LevelDefinition level0 = new LevelDefinition( 0, "L0" );
+					level0.tmpShapeDefn = new Shape.CircleShapeDefn( 5f );
 
-				AddDefnWithNextHighId( level0 );
+					AddDefnWithNextHighId( level0 );
+				}
 
-				LevelDefinition level1 = new LevelDefinition( 0, "L1" );
-				level1.tmpShapeDefn = new Shape.CircleShapeDefn( 3f );
-				level1.AddInitialStaticBlock( new BlockDefinition( Vector3.zero, new Shape.CircleShapeDefn(1f)) );
-				level1.AddInitialStaticBlock( new BlockDefinition(  new Vector3(0.1f,0.1f,0f), new Shape.CircleShapeDefn( 0.5f ) ) );
+				if (GetLevelFromName( "L1" ) != null)
+				{
+					Debug.LogWarning( "Not overrwiting L1" );
+				}
+				else
+				{
+					LevelDefinition level1 = new LevelDefinition( 1, "L1" );
+					level1.tmpShapeDefn = new Shape.CircleShapeDefn( 3f );
+					level1.AddInitialStaticBlock( new BlockDefinition( Vector3.zero, new Shape.CircleShapeDefn( 1f ) ) );
+					level1.AddInitialStaticBlock( new BlockDefinition( new Vector3( 0.1f, 0.1f, 0f ), new Shape.CircleShapeDefn( 0.5f ) ) );
 
-				AddDefnWithNextHighId( level1 );
+					AddDefnWithNextHighId( level1 );
+				}
 
+				if (GetLevelFromName( "L2" ) != null)
+				{
+					Debug.LogWarning( "Not overrwiting L2" );
+				}
+				else
+				{
+					LevelDefinition level2 = new LevelDefinition( 2, "L2" );
+					level2.tmpShapeDefn = new Shape.CircleShapeDefn( 2f );
+					level2.AddInitialStaticBlock( new BlockDefinition( Vector3.zero, new Shape.RectShapeDefn( new Vector2( 3f, 0.5f ) ) ) );
+					level2.AddInitialStaticBlock( new BlockDefinition( new Vector3( 1f, 2f, 0f ), new Shape.RectShapeDefn( new Vector2( 2f, 0.5f ) ) ) );
+
+					AddDefnWithNextHighId( level2 );
+				}
 
 				if (DEBUG_LevelStore)
 				{

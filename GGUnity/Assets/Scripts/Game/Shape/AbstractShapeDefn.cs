@@ -70,6 +70,21 @@ namespace RJWS.GravGame.Shape
 								}
 								break;
 							}
+						case EShapeType.Rectangle:
+							{
+								RectShapeDefn rectDefn = new RectShapeDefn( );
+								if (rectDefn.ExtractRequiredFromString(ref str ))
+								{
+									Debug.Log( "Extracted RectDefn " + rectDefn.DebugDescribe( ) );
+									result = rectDefn;
+									success = true;
+								}
+								else
+								{
+									Debug.LogWarning( "Failed to extract rectDefn from '" + str + "'" );
+								}
+								break;
+							}
 						default:
 							{
 								Debug.LogError( "Unhandled shape type: " + shapeType );
