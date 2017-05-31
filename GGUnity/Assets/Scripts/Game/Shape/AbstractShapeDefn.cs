@@ -18,7 +18,7 @@ namespace RJWS.GravGame.Shape
 			protected set;
 		}
 
-		protected AbstractShapeDefn( EShapeType est ): base(" SHAPE{}shape ")
+		protected AbstractShapeDefn( EShapeType est, string sep ): base(sep)
 		{
 			eShapeType = est;
 		}

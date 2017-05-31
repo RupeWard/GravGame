@@ -35,11 +35,12 @@ namespace RJWS.GravGame.Shape
 
 		private const float DEFAULT_RADIUS = 1f;
 
-		public CircleShapeDefn(): base(EShapeType.Circle)
+		private const string circleSeps = " CIRC{}circ ";
+        public CircleShapeDefn(): base(EShapeType.Circle, circleSeps)
 		{
 		}
 
-		public CircleShapeDefn( float f) : base( EShapeType.Circle )
+		public CircleShapeDefn( float f) : base( EShapeType.Circle, circleSeps )
 		{
 			SetRadius( f );
 		}

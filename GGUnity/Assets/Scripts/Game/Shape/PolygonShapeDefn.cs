@@ -36,12 +36,13 @@ namespace RJWS.GravGame.Shape
 		private const float DEFAULT_RADIUS = 1f;
 		*/
 
+		private const string polygonSeps = " POLY{}poly ";
 
-		public PolygonShapeDefn( ): base(EShapeType.Circle)
+		public PolygonShapeDefn( ): base(EShapeType.Polygon, polygonSeps)
 		{
 		}
 
-		public PolygonShapeDefn( float f) : base( EShapeType.Polygon )
+		public PolygonShapeDefn( float f) : base( EShapeType.Polygon, polygonSeps )
 		{
 //			SetRadius( f );
 		}
