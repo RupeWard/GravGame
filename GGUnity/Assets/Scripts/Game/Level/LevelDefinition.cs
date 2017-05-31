@@ -25,9 +25,10 @@ namespace RJWS.GravGame
 			set;
 		}
 
-		public Shape.AbstractShapeDefn tmpShapeDefn = null;
+		private const string LEVEL_SEPS = " LEVEL{}level ";
+        public Shape.AbstractShapeDefn tmpShapeDefn = null;
 
-		public LevelDefinition() : base ()
+		public LevelDefinition() : base (LEVEL_SEPS)
 		{
 			levelId = s_numLevelsCreated;
 			s_numLevelsCreated++;
@@ -35,7 +36,7 @@ namespace RJWS.GravGame
 			levelName = "_Level_" + levelId;
 		}
 
-		public LevelDefinition(int id, string n) : base( )
+		public LevelDefinition(int id, string n) : base(LEVEL_SEPS )
 		{
 			levelId = id;
 			levelName = n;

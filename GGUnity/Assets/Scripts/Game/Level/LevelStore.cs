@@ -151,8 +151,11 @@ namespace RJWS.GravGame
 
 			_idCol.SetParamValue( ld.levelId );
 			_nameCol.SetParamValue( ld.levelName );
+
 			System.Text.StringBuilder sb = new System.Text.StringBuilder( );
 			ld.AddToString( sb );
+
+//			ld.AddToString( sb );
 			_defnCol.SetParamValue( sb.ToString( ) );
 
 			insertCommand.ExecuteNonQuery( );
@@ -178,6 +181,7 @@ namespace RJWS.GravGame
 				{
 					_idCol.SetParamValue( ld.levelId );
 					_nameCol.SetParamValue( ld.levelName );
+
 					System.Text.StringBuilder sb = new System.Text.StringBuilder( );
 					ld.AddToString( sb );
 					_defnCol.SetParamValue( sb.ToString( ) );

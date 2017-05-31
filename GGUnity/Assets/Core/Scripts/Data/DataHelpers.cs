@@ -303,7 +303,7 @@ namespace RJWS.Core.Data
 			bool success = false;
 			System.Text.RegularExpressions.Regex regex =
 				new System.Text.RegularExpressions.Regex( @"^(\d+)" );
-			System.Text.RegularExpressions.Match match = regex.Match( str );
+//			System.Text.RegularExpressions.Match match = regex.Match( str );
 			if (str.StartsWith(true.ToString()))
 			{
 				v = true;

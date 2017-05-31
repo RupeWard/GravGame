@@ -11,10 +11,21 @@ namespace RJWS.Core.Data
 {
 	public partial class SqliteUtils : RJWS.Core.Singleton.SingletonApplicationLifetimeLazy<SqliteUtils>
 	{
-		public static readonly bool DEBUG_SQL = false;
+		public static readonly bool DEBUG_SQL = true;
 
 		private Dictionary<string, SqliteConnection> storedConnections_ = new Dictionary<string, SqliteConnection>( );
-		private string databaseFolder_ = "ERR_DBFOLDER_NOT_SET";
+		static private string databaseFolder_ = "";
+		static public string databaseFolder
+		{
+			get
+			{
+				if (databaseFolder_.Length == 0)
+				{
+					databaseFolder_ = Application.persistentDataPath + "/Data";
+				}
+				return databaseFolder_;
+			}
+		}
 
 		public Action databaseLoadComplete;
 
@@ -26,17 +37,16 @@ namespace RJWS.Core.Data
 
 		protected override void PostAwake( )
 		{
-			databaseFolder_ = Application.persistentDataPath + "/Data";
 		}
 
-		private string getDatabaseFilename( string databaseName )
+		private static string getDatabaseFilename( string databaseName )
 		{
 			return databaseName + ".db";
 		}
 
-		private string getDatabasePath( string databaseName )
+		public static string getDatabasePath( string databaseName )
 		{
-			return databaseFolder_ + "/" + getDatabaseFilename( databaseName );
+			return databaseFolder + "/" + getDatabaseFilename( databaseName );
 		}
 
 		public static string streamingAssetsPath
@@ -58,9 +68,14 @@ namespace RJWS.Core.Data
 		{
 			foreach (KeyValuePair<string, SqliteConnection> pair in storedConnections_)
 			{
+				if (DEBUG_SQL)
+				{
+					Debug.Log( "SQL: closing DB " + pair.Key );
+				}
 				pair.Value.Close( );
 				pair.Value.Dispose( );
 			}
+			storedConnections_.Clear( );
 		}
 
 
@@ -93,7 +108,32 @@ namespace RJWS.Core.Data
 			return connection;
 		}
 
+		static public bool DeleteDB(string dbName)
+		{
+			bool success = false;
+			string fName = getDatabasePath(dbName);
 
+			System.IO.FileInfo fileInfo = new System.IO.FileInfo( fName );
+			if (fileInfo.Exists)
+			{
+				fileInfo.Delete( );
+				success = true;
+				Debug.Log( "Deleted DB file " + fName );
+			}
+			else
+			{
+				Debug.LogWarning( "Delete DB file couldn't find " + fName );
+			}
+			return success;
+		}
+
+		static public bool DeleteTable(string dbName, string tableName)
+		{
+			bool success = false;
+
+			return success;
+		}
+	
 		public bool doesTableExist( string dbName, string tableName )
 		{
 			SqliteConnection connection = getConnection( dbName );
@@ -112,13 +152,13 @@ namespace RJWS.Core.Data
 				Debug.Log( "SQL: initialiseDatabases( " + language + " ): Language not implemented" );
 			}
 
-			if (!Directory.Exists( databaseFolder_ ))
+			if (!Directory.Exists( databaseFolder ))
 			{
 				if (DEBUG_SQL)
 				{
-					Debug.Log( "Creating database folder '" + databaseFolder_ + "'" );
+					Debug.Log( "Creating database folder '" + databaseFolder + "'" );
 				}
-				Directory.CreateDirectory( databaseFolder_ );
+				Directory.CreateDirectory( databaseFolder );
 			}
 
 			//		SqliteUtils.language = language;

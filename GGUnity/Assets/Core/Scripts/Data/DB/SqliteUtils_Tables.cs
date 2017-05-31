@@ -261,7 +261,7 @@ namespace RJWS.Core.Data
 
 			public bool Create( string dbName, bool bOverwrite )
 			{
-				bool exists = SqliteUtils.Instance.doesTableExist( name_, dbName );
+				bool exists = SqliteUtils.Instance.doesTableExist( dbName, name_);
 
                 if (DEBUG_TABLES)
 				{

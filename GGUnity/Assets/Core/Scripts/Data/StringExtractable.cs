@@ -30,7 +30,7 @@ namespace RJWS.Core.Data
 
 		public T Value;
 
-		private string _sep = "{}";
+		private string _sep = "";
 		private string sep
 		{
 			get { return _sep; }
@@ -43,7 +43,6 @@ namespace RJWS.Core.Data
 				else
 				{
 					_sep = value;
-//					SetEndsRegex( );
 				}
 			}
 		}
@@ -65,18 +64,25 @@ namespace RJWS.Core.Data
 			{
 				if (_sep.Length > 2)
 				{
-					if (_sep.Length % 1 == 0)
+					if ( (_sep.Length & 1) == 0)
 					{
+//						Debug.LogWarning( "SepLength for " + _sep + " halved = " + _sep.Length/2 );
 						return _sep.Length / 2;
 					}
 					else
 					{
+//						Debug.LogWarning( "SepLength for " + _sep + " = " + _sep.Length );
 						return _sep.Length;
 					}
 				}
+				else if (_sep.Length == 2)
+				{
+//					Debug.LogWarning( "SepLength for " + _sep + " = 1");
+					return 1;
+				}
 				else
 				{
-					return 1;
+					throw new System.Exception( "Invalid seps = '" + _sep + "'" );
 				}
 			}
 		}
@@ -251,10 +257,6 @@ namespace RJWS.Core.Data
 						}
 
 					}
-					else
-					{
-						string msg = GetType( ) + " Extracted  from '" + prevStr + "'";
-					}
 				}
 				else
 				{
@@ -328,11 +330,11 @@ namespace RJWS.Core.Data
 			return DEBUG_TextExtractable || DEBUG_AbstractStringExtractable;
 		}
 	
+		// Not - this one assumes the whole string is needed. The bounds of the string are determined at a higher level
 		override protected bool _extractFromString( ref string str, ref string result)
 		{
 			Debug.Log( "TextExtractor.extractFromString (" + str+ ")" );
 			result = str;
-//			str = string.Empty;
 			Debug.Log( "TextExtractor got '" + Value + "'" );
 			return true;
 		}
