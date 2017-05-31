@@ -65,6 +65,7 @@ namespace RJWS.GravGame
 		{
 			if (target == null)
 			{
+				// FIXME or write empty string
 				target = this;
 			}
 			Shape.AbstractShapeDefn.WriteShapeDefn( sb, target.tmpShapeDefn );

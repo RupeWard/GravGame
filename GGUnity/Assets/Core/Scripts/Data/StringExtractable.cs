@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 
 using RJWS.Core.DebugDescribable;
+using System;
+using System.Text;
 
 namespace RJWS.Core.Data
 {
@@ -275,6 +277,26 @@ namespace RJWS.Core.Data
 	}
 	*/
 
+	public class ListExtractable< T >: AbstractStringExtractable< ListExtractable <T> > 
+	{
+		private static readonly bool DEBUG_ListExtractable = true;
+
+		protected override bool DebugType( )
+		{
+			return DEBUG_ListExtractable;
+		}
+
+		protected override bool _addToString( ListExtractable<T> target, StringBuilder sb )
+		{
+			throw new NotImplementedException( );
+		}
+
+		protected override bool _extractFromString( ref string str, ref ListExtractable<T> result )
+		{
+			throw new NotImplementedException( );
+		}
+	}
+
 	public class TextExtractable: AbstractStringExtractable<string>
 	{
 		private static readonly bool DEBUG_TextExtractable = true;
@@ -350,12 +372,13 @@ namespace RJWS.Core.Data
 		override protected bool _extractFromString( ref string str, ref float result )
 		{
 			bool success = false;
-			float parseVal;
-			if (float.TryParse(str, out parseVal))
+			float parseVal=0f;
+
+			if (DataHelpers.extractFloat(ref str, ref parseVal, false))
 			{
 				Debug.Log( "Got float "+parseVal+ " from '" + str + "'" );
 				result = parseVal;
-				str = string.Empty;
+//				str = string.Empty;
 				success = true;
 			}
 			else
