@@ -25,6 +25,14 @@ namespace RJWS.GravGame
 			set;
 		}
 
+		private List<BlockDefinition> _initialStaticBlocks = new List<BlockDefinition>( );
+		public void AddInitialStaticBlock(BlockDefinition bd)
+		{
+			_initialStaticBlocks.Add( bd );
+		}
+
+		private ListExtractable<BlockDefinition, BlockDefinition> _staticBlocksExtractor = new ListExtractable<BlockDefinition, BlockDefinition>( );
+		 
 		private const string LEVEL_SEPS = " LEVEL{}level ";
         public Shape.AbstractShapeDefn tmpShapeDefn = null;
 
@@ -48,17 +56,34 @@ namespace RJWS.GravGame
 		{
 			bool success = false;
 
-			result = this;
-			Shape.AbstractShapeDefn asdIn = null;
-			if (Shape.AbstractShapeDefn.ExtractShapeDefn(ref str, ref asdIn, true))
+			if (result == null)
 			{
-				result.tmpShapeDefn = asdIn;
-				success = true;
+				result = this;// FIXME
+			}
+
+			if (_staticBlocksExtractor.ExtractRequiredFromString(ref str ))
+			{
+				_staticBlocksExtractor.ConsumeList(_initialStaticBlocks );
+
+				Shape.AbstractShapeDefn asdIn = null;
+				if (Shape.AbstractShapeDefn.ExtractShapeDefn( ref str, ref asdIn, true ))
+				{
+					tmpShapeDefn = asdIn;
+					result.tmpShapeDefn = tmpShapeDefn;
+					result._initialStaticBlocks = _initialStaticBlocks;
+					success = true;
+				}
+				else
+				{
+					Debug.LogWarning( "Failed to extract shape defn from '" + str + "'" );
+				}
+
 			}
 			else
 			{
-				Debug.LogWarning( "Failed to extract shape defn from '" + str + "'" );
+				Debug.LogWarning( "Failed to extract initial static blocks list from '" + str + "'" );
 			}
+
 			return success;
 		}
 
@@ -69,6 +94,9 @@ namespace RJWS.GravGame
 				// FIXME or write empty string
 				target = this;
 			}
+			_staticBlocksExtractor = new ListExtractable<BlockDefinition, BlockDefinition>( _initialStaticBlocks );
+			_staticBlocksExtractor.AddToString( sb );
+
 			Shape.AbstractShapeDefn.WriteShapeDefn( sb, target.tmpShapeDefn );
 			return true;
 		}
@@ -85,6 +113,23 @@ namespace RJWS.GravGame
 		public void DebugDescribe( System.Text.StringBuilder sb )
 		{
 			sb.Append( "[ Level ").Append(levelId).Append(" ("+ levelName + ") " );
+			if (_initialStaticBlocks.Count == 0)
+			{
+				sb.Append( "NO ISBs " );
+			}
+			else
+			{
+				sb.Append( _initialStaticBlocks.Count ).Append( " ISBs" );
+				if (_initialStaticBlocks.Count > 0)
+				{
+					sb.Append( ":" );
+					foreach (BlockDefinition bd in _initialStaticBlocks)
+					{
+						sb.DebugDescribe( bd );
+					}
+				}
+				sb.Append( " " );
+			}
 			if (tmpShapeDefn != null)
 			{
 				tmpShapeDefn.DebugDescribe( sb );

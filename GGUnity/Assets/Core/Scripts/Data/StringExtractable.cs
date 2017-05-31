@@ -279,23 +279,94 @@ namespace RJWS.Core.Data
 	}
 	*/
 
-	public class ListExtractable< T >: AbstractStringExtractable< ListExtractable <T> > 
+	public class ListExtractable<T, TEmbedded >: AbstractStringExtractable< ListExtractable <T, TEmbedded> > where T : AbstractStringExtractable<TEmbedded>, new()
 	{
 		private static readonly bool DEBUG_ListExtractable = true;
+
+		private List<TEmbedded> _list = new List<TEmbedded>( );
+
+		private IntExtractable numExtractable = new IntExtractable( );
+		private T itemExtractable = new T( );
+
+		public ListExtractable( ) : base(  )
+		{
+		}
+
+		public ListExtractable(string s ): base(s)
+		{
+		}
+
+		public ListExtractable(IEnumerable<TEmbedded> ts):base()
+		{
+			_list.AddRange( ts );
+		}
+
+		public void ConsumeList( List<TEmbedded> dest)
+		{
+			dest.AddRange( _list );
+			_list.Clear( );
+		}
 
 		protected override bool DebugType( )
 		{
 			return DEBUG_ListExtractable;
 		}
 
-		protected override bool _addToString( ListExtractable<T> target, StringBuilder sb )
+		protected override bool _addToString( ListExtractable<T, TEmbedded> target, StringBuilder sb )
 		{
-			throw new NotImplementedException( );
+			bool success = false;
+			if (target == null)
+			{
+				target = this;
+			}
+			numExtractable.Value = target._list.Count;
+			numExtractable.AddToString( sb );
+			if (target._list.Count > 0)
+			{
+				foreach (TEmbedded t in target._list)
+				{
+					itemExtractable.Value = t;
+					itemExtractable.AddToString( sb );
+				}
+			}
+			success = true;
+
+			return success;
 		}
 
-		protected override bool _extractFromString( ref string str, ref ListExtractable<T> result )
+		protected override bool _extractFromString( ref string str, ref ListExtractable<T, TEmbedded> result )
 		{
-			throw new NotImplementedException( );
+			bool success = false;
+
+			if (result == null)
+			{
+				result = this;
+			}
+
+			int num = 0;
+			if (numExtractable.ExtractOptionalFromString(ref str))
+			{
+				success = true;
+				num = numExtractable.Value;
+				List<TEmbedded> newList = new List<TEmbedded>( );
+				if (num > 0)
+				{
+					for (int i = 0; i < num; i++)
+					{
+						if (itemExtractable.ExtractOptionalFromString(ref str))
+						{
+							newList.Add( itemExtractable.Value );
+						}
+						else
+						{
+							Debug.LogWarning( "Failed to read item " + i + " in list of " + num + " of type " + typeof( T ) );
+						}
+					}
+				}
+				result._list = newList;
+				Debug.Log( "Extracted list of type " + typeof( T ) + " with " + result._list.Count + " loaded of " + num );
+			}
+			return success;
 		}
 	}
 
@@ -373,12 +444,13 @@ namespace RJWS.Core.Data
 
 		override protected bool _extractFromString( ref string str, ref float result )
 		{
+			string prevStr = str;
 			bool success = false;
 			float parseVal=0f;
 
 			if (DataHelpers.extractFloat(ref str, ref parseVal, false))
 			{
-				Debug.Log( "Got float "+parseVal+ " from '" + str + "'" );
+				Debug.Log( "Got float "+parseVal+ " from '" + prevStr + "' leaving '"+str+"'" );
 				result = parseVal;
 //				str = string.Empty;
 				success = true;
@@ -399,6 +471,57 @@ namespace RJWS.Core.Data
 
 	}
 
+	public class IntExtractable : AbstractStringExtractable<int>
+	{
+		private static readonly bool DEBUG_IntExtractable = true;
+
+		public IntExtractable( int v, string sep ) : base( sep )
+		{
+			Value = v;
+		}
+
+		public IntExtractable( int v ) : base( )
+		{
+			Value = v;
+		}
+
+		public IntExtractable( ) : base( )
+		{
+		}
+
+		override protected bool DebugType( )
+		{
+			return DEBUG_IntExtractable || DEBUG_AbstractStringExtractable;
+		}
+
+		override protected bool _extractFromString( ref string str, ref int result )
+		{
+			string prevStr = str;
+			bool success = false;
+			int parseVal = 0;
+
+			if (DataHelpers.extractInt( ref str, ref parseVal, false ))
+			{
+				Debug.Log( "Got int " + parseVal + " from "+prevStr+" leaving '" + str + "'" );
+				result = parseVal;
+				//				str = string.Empty;
+				success = true;
+			}
+			else
+			{
+				Debug.LogError( "Couldn't parse int from '" + str + "'" );
+			}
+			return success;
+		}
+
+		override protected bool _addToString( int target, System.Text.StringBuilder sb )
+		{
+			sb.Append( target );
+			return true;
+		}
+
+
+	}
 
 	static public class StringExtractableHelpers
 	{

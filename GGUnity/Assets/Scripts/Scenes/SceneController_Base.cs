@@ -60,6 +60,7 @@ abstract public class SceneController_Base : MonoBehaviour
 	// Override in subclasses for set-up
 	protected virtual void OnDatabasesLoaded( )
 	{
+		SqliteUtils.Instance.databaseLoadComplete -= OnDatabasesLoaded;
 		GravGameManager.CreateInstance( );
 	}
 

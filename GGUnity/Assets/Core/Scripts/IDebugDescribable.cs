@@ -18,9 +18,10 @@ namespace RJWS.Core.DebugDescribable
 			return sb.ToString( );
 		}
 
-		public static void DebugDescribe( this System.Text.StringBuilder sb, IDebugDescribable dd )
+		public static System.Text.StringBuilder DebugDescribe( this System.Text.StringBuilder sb, IDebugDescribable dd )
 		{
 			sb.Append( (dd == null) ? ("NULL") : (dd.DebugDescribe( )) );
+			return sb;
 		}
 
 		public static void DebugDescribe<T>( this IEnumerable<T> coll, System.Text.StringBuilder sb )

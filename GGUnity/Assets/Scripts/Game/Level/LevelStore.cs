@@ -46,17 +46,25 @@ namespace RJWS.GravGame
 
 			// load table
 			LoadAllDefns( true );
-			AddDefaultDefns( );
+			AddTestDefns( );
 		}
 
-		private void AddDefaultDefns()
+		private void AddTestDefns()
 		{
-			if (_levels.Count == 0 )
+			if (_levels.Count < 2 )
 			{
 				LevelDefinition level0 = new LevelDefinition( 0, "L0" );
 				level0.tmpShapeDefn = new Shape.CircleShapeDefn( 5f );
 
 				AddDefnWithNextHighId( level0 );
+
+				LevelDefinition level1 = new LevelDefinition( 0, "L1" );
+				level1.tmpShapeDefn = new Shape.CircleShapeDefn( 3f );
+				level1.AddInitialStaticBlock( new BlockDefinition( Vector3.zero, new Shape.CircleShapeDefn(1f)) );
+				level1.AddInitialStaticBlock( new BlockDefinition(  new Vector3(0.1f,0.1f,0f), new Shape.CircleShapeDefn( 0.5f ) ) );
+
+				AddDefnWithNextHighId( level1 );
+
 
 				if (DEBUG_LevelStore)
 				{
@@ -92,6 +100,27 @@ namespace RJWS.GravGame
 				}
 			}
 			return result;
+		}
+
+		private LevelDefinition GetLevelFromId(int id)
+		{
+			if (_levels.ContainsKey( id ))
+			{
+				return _levels[id];
+			}
+			return null;
+		}
+
+		private LevelDefinition GetLevelFromName( string n )
+		{
+			foreach (LevelDefinition ld in _levels.Values)
+			{
+				if (ld.levelName == n)
+				{
+					return ld;
+				}
+			}
+			return null;
 		}
 
 		public bool AddDefnWithNextFreeId( LevelDefinition ld )

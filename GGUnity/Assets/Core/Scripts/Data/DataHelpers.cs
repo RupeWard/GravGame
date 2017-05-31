@@ -10,19 +10,20 @@ namespace RJWS.Core.Data
 
 		public static readonly string FLOAT_REGEX = @"[-+]?[0-9]*\.?[0-9]+";
 
-		static public List<Vector3> extractVector3s( ref string str )
-		{
-			List<Vector3> result = new List<Vector3>( );
-			Vector3 v = Vector3.zero;
 
-			while (extractOptionalVector3( ref str, ref v ))
+		#region Vector4
+
+		static public List<Vector4> extractVector4List( ref string str )
+		{
+			List<Vector4> result = new List<Vector4>( );
+			Vector4 v = Vector4.zero;
+
+			while (extractOptionalVector4( ref str, ref v ))
 			{
 				result.Add( v );
 			}
 			return result;
 		}
-
-		#region Vector4
 
 		static public bool extractRequiredVector4( ref string str, ref Vector4 v )
 		{
@@ -81,6 +82,18 @@ namespace RJWS.Core.Data
 
 		#region Vector3
 
+		static public List<Vector3> extractVector3List( ref string str )
+		{
+			List<Vector3> result = new List<Vector3>( );
+			Vector3 v = Vector3.zero;
+
+			while (extractOptionalVector3( ref str, ref v ))
+			{
+				result.Add( v );
+			}
+			return result;
+		}
+
 		static public bool extractRequiredVector3( ref string str, ref Vector3 v )
 		{
 			return extractVector3( ref str, ref v, true );
@@ -135,6 +148,18 @@ namespace RJWS.Core.Data
 
 		#region Vector2
 
+		static public List<Vector2> extractVector2List( ref string str )
+		{
+			List<Vector2> result = new List<Vector2>( );
+			Vector2 v = Vector3.zero;
+
+			while (extractOptionalVector2( ref str, ref v ))
+			{
+				result.Add( v );
+			}
+			return result;
+		}
+
 		static public bool extractRequiredVector2( ref string str, ref Vector2 v )
 		{
 			return extractVector2( ref str, ref v, true );
@@ -188,6 +213,27 @@ namespace RJWS.Core.Data
 
 		#region Float
 
+		static public List< float > extractFloatList( ref string str )
+		{
+			List< float > result = new List< float >( );
+			float v = 0f;
+
+			while (extractOptionalFloat( ref str, ref v ))
+			{
+				result.Add( v );
+				if (str.StartsWith(","))
+				{
+					str = str.Replace( ",","" );
+				}
+				else
+				{
+					break;
+				}
+			}
+			return result;
+		}
+
+
 		static public bool extractRequiredFloat( ref string str, ref float v )
 		{
 			return extractFloat( ref str, ref v, true );
@@ -237,6 +283,27 @@ namespace RJWS.Core.Data
 		#endregion Float
 
 		#region Int
+
+		static public List<int> extractIntList( ref string str )
+		{
+			List<int> result = new List<int>( );
+			int v = 0;
+
+			while (extractOptionalInt( ref str, ref v ))
+			{
+				result.Add( v );
+				if (str.StartsWith( "," ))
+				{
+					str = str.Replace( ",", "" );
+				}
+				else
+				{
+					break;
+				}
+			}
+			return result;
+		}
+
 
 		static public bool extractRequiredInt( ref string str, ref int v )
 		{
