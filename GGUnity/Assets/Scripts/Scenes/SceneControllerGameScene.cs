@@ -7,6 +7,8 @@ public class SceneControllerGameScene : SceneController_Base
 {
 	public RectTransform canvasRT;
 
+	public UnityEngine.UI.Text levelText;
+
 	override public SceneManager.EScene Scene( )
 	{
 		return SceneManager.EScene.GameScene;
@@ -14,12 +16,14 @@ public class SceneControllerGameScene : SceneController_Base
 
 	//	static private readonly bool DEBUG_LOCAL = false;
 
+
 	protected override void PostStart( )
 	{
 	}
 
 	protected override void PostAwake( )
 	{
+		levelText.text = RJWS.GravGame.GravGameManager.Instance.currentLevel.levelName;
 	}
 
 	public void QuitScene()
@@ -27,4 +31,13 @@ public class SceneControllerGameScene : SceneController_Base
 		SceneManager.Instance.SwitchScene( SceneManager.EScene.DevSetup);
 	}
 
+	public void HandleQuitButtonPressed()
+	{
+		QuitScene( );
+	}
+
+	public void HandleRestartButtonPressed()
+	{
+		SceneManager.Instance.ReloadScene( Scene( ) );
+	}
 }
