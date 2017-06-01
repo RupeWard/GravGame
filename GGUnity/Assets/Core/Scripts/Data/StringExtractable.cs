@@ -27,7 +27,6 @@ namespace RJWS.Core.Data
 		}
 		abstract protected bool _addToString( T target, System.Text.StringBuilder sb );
 
-
 		public T Value;
 
 		private string _sep = "";
@@ -356,6 +355,16 @@ namespace RJWS.Core.Data
 						if (itemExtractable.ExtractOptionalFromString(ref str))
 						{
 							newList.Add( itemExtractable.Value );
+							string msg = string.Empty;
+							if (itemExtractable is IDebugDescribable)
+							{
+								msg = (itemExtractable as IDebugDescribable).DebugDescribe( );
+                            }
+							else
+							{
+								msg = itemExtractable.Value.ToString( );
+							}
+							Debug.LogWarning( "Read item " + i + " in list of " + num + " of type " + typeof( T )+ " = "+msg );
 						}
 						else
 						{

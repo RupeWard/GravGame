@@ -31,6 +31,16 @@ namespace RJWS.GravGame
 			_shapeDefinition = asd;
 		}
 
+		public BlockPositionInfo position
+		{
+			get { return _blockPositionInfo; }
+		}
+
+		public Shape.AbstractShapeDefn shape
+		{
+			get { return _shapeDefinition;  }
+		}
+
 		#region AbstractStringExtractable
 
 		protected override bool DebugType( )

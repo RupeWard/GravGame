@@ -23,7 +23,9 @@ namespace RJWS.GravGame.Shape
 			eShapeType = est;
 		}
 
-		public static bool WriteShapeDefn(System.Text.StringBuilder sb, AbstractShapeDefn asd)
+		abstract public List<Vector2> GetEdgePoints( Vector2 centre, float resolution);
+
+        public static bool WriteShapeDefn(System.Text.StringBuilder sb, AbstractShapeDefn asd)
 		{
 			System.Text.StringBuilder defnSb = new System.Text.StringBuilder( );
 			asd.AddToString( defnSb );

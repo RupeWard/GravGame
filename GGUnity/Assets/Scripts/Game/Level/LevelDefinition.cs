@@ -26,6 +26,11 @@ namespace RJWS.GravGame
 		}
 
 		private List<BlockDefinition> _initialStaticBlocks = new List<BlockDefinition>( );
+		public List<BlockDefinition> initialStaticBlocks
+		{
+			get { return _initialStaticBlocks; }
+		}
+
 		public void AddInitialStaticBlock(BlockDefinition bd)
 		{
 			_initialStaticBlocks.Add( bd );

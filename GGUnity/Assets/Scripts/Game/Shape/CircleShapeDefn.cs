@@ -50,6 +50,28 @@ namespace RJWS.GravGame.Shape
 			radius = f;
 		}
 
+		override public List<Vector2> GetEdgePoints( Vector2 centre, float resolution )
+		{
+			List<Vector2> result = new List<Vector2>( );
+
+			float circumf = 2f * Mathf.PI * _radius;
+			int num = Mathf.CeilToInt( circumf / resolution );
+
+			float angleStep = 2f * Mathf.PI / num;
+
+			for (int i = 0; i < num; i++)
+			{
+				float angle = angleStep * i;
+				result.Add( 
+					new Vector2( 
+						centre.x + _radius * Mathf.Cos(angle * Mathf.Deg2Rad  ),
+						centre.y + _radius * Mathf.Sin( angle * Mathf.Deg2Rad )
+                        ));
+			}
+			return result;
+		}
+
+
 		#region AbstractStringExtractable
 
 		override protected bool _extractFromString( ref string str, ref AbstractShapeDefn result )

@@ -47,6 +47,11 @@ namespace RJWS.GravGame.Shape
 //			SetRadius( f );
 		}
 
+		override public List<Vector2> GetEdgePoints( Vector2 centre, float resolution )
+		{
+			throw new System.Exception( "NOT IMPL" );
+		}
+
 		#region AbstractStringExtractable
 
 		override protected bool _extractFromString( ref string str, ref AbstractShapeDefn result )

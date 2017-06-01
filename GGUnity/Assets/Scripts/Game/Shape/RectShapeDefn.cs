@@ -44,7 +44,16 @@ namespace RJWS.GravGame.Shape
 		{
 			dims = d;
 		}
-
+		
+		override public List<Vector2> GetEdgePoints( Vector2 centre, float resolution)
+		{
+			List<Vector2> result = new List<Vector2>( );
+			result.Add( new Vector2( centre.x - 0.5f * dims.x, centre.x - 0.5f * dims.y ) );
+			result.Add( new Vector2( centre.x - 0.5f * dims.x, centre.x + 0.5f * dims.y ) );
+			result.Add( new Vector2( centre.x + 0.5f * dims.x, centre.x + 0.5f * dims.y ) );
+			result.Add( new Vector2( centre.x + 0.5f * dims.x, centre.x - 0.5f * dims.y ) );
+			return result;
+		}
 
 		#region AbstractStringExtractable
 

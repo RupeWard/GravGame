@@ -9,6 +9,8 @@ public class SceneControllerGameScene : SceneController_Base
 
 	public UnityEngine.UI.Text levelText;
 
+	private RJWS.GravGame.LevelHandler _levelHandler = null;
+
 	override public SceneManager.EScene Scene( )
 	{
 		return SceneManager.EScene.GameScene;
@@ -24,6 +26,8 @@ public class SceneControllerGameScene : SceneController_Base
 	protected override void PostAwake( )
 	{
 		levelText.text = RJWS.GravGame.GravGameManager.Instance.currentLevel.levelName;
+		_levelHandler = new RJWS.GravGame.LevelHandler( RJWS.GravGame.GravGameManager.Instance.currentLevel );
+		_levelHandler.SetUpLevel( );
 	}
 
 	public void QuitScene()
