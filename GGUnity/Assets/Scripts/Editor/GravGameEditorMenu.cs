@@ -14,5 +14,11 @@ namespace RJWS.GravGame
 		{
 			SqliteUtils.DeleteDB( "CoreData" );
 		}
+
+		[MenuItem( "GravGame/DB/Delete CoreData Levels Table", false, 1000 )]
+		public static void MenuItem_DeleteCoreDataLevels( )
+		{
+			SqliteUtils.Table.Delete( "LevelDefn", "CoreData" );
+		}
 	}
 }

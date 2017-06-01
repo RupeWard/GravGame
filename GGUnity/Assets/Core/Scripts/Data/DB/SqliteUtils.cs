@@ -127,13 +127,6 @@ namespace RJWS.Core.Data
 			return success;
 		}
 
-		static public bool DeleteTable(string dbName, string tableName)
-		{
-			bool success = false;
-
-			return success;
-		}
-	
 		public bool doesTableExist( string dbName, string tableName )
 		{
 			SqliteConnection connection = getConnection( dbName );

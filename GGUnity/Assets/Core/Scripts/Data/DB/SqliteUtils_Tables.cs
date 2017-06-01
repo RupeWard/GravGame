@@ -259,6 +259,32 @@ namespace RJWS.Core.Data
 				return Create( dbName, false );
 			}
 
+			public static bool Delete(string tableName, string dbName)
+			{
+				bool exists = SqliteUtils.Instance.doesTableExist( dbName, tableName);
+				if (exists)
+				{
+					SqliteConnection connection = SqliteUtils.Instance.getConnection( dbName );
+					if (connection == null)
+					{
+						Debug.LogError( "Couldn't get conn to " + dbName + " on deleting table " + tableName);
+					}
+					else
+					{
+						SqliteCommand deleteCommand = connection.CreateCommand( );
+
+						deleteCommand.CommandText = "DROP TABLE " + tableName;
+                        deleteCommand.ExecuteNonQuery( );
+						deleteCommand.Dispose( );
+					}
+				}
+				else
+				{
+					Debug.LogWarning( "No table " + tableName+ " in " + dbName );
+				}
+				return exists;
+			}
+
 			public bool Create( string dbName, bool bOverwrite )
 			{
 				bool exists = SqliteUtils.Instance.doesTableExist( dbName, name_);

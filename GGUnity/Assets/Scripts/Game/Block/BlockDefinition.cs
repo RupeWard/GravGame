@@ -61,8 +61,15 @@ namespace RJWS.GravGame
 			}
 			else
 			{
+				Debug.LogError( "this = "+this.DebugDescribe( ) 
+					+"\ntarget = "+target.DebugDescribe( ) );
+				target._blockPositionInfo.AddToString( sb );
+
+				Debug.LogError( "this = " + this.DebugDescribe( )
+					+ "\ntarget = " + target.DebugDescribe( ) );
+
 				_blockPositionInfo.Value = target._blockPositionInfo.Value;
-				_blockPositionInfo.AddToString( sb );
+				_shapeDefinition = target._shapeDefinition;
 
 				if (Shape.AbstractShapeDefn.WriteShapeDefn(sb, target._shapeDefinition ))
 				{

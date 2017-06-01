@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using RJWS.Core.DebugDescribable;
+
 namespace RJWS.GravGame
 {
 	public class BlockFactory : RJWS.Core.Singleton.SingletonSceneLifetime<BlockFactory>
@@ -27,6 +29,7 @@ namespace RJWS.GravGame
             block.cachedTransform.localPosition = new Vector3( bd.position.position.x, bd.position.position.y, 0f );
 			block.cachedTransform.rotation = Quaternion.Euler( new Vector3( 0f, 0f, bd.position.zRotation ) );
 			block.cachedTransform.localScale = Vector3.one;
+			Debug.Log( "Creating static block from " + bd.DebugDescribe( )+" at "+ block.cachedTransform.localPosition );
 			block.Init( bd );
 			block.MakeStatic( staticBlockMat);
 			_numBlocks++;

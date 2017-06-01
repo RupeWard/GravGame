@@ -34,6 +34,7 @@ namespace RJWS.GravGame
 		public void AddInitialStaticBlock(BlockDefinition bd)
 		{
 			_initialStaticBlocks.Add( bd );
+			Debug.LogError( "Added static block " + bd.DebugDescribe( ) );
 		}
 
 		private ListExtractable<BlockDefinition, BlockDefinition> _staticBlocksExtractor = new ListExtractable<BlockDefinition, BlockDefinition>( );

@@ -84,9 +84,9 @@ namespace RJWS.GravGame
 		protected override bool _extractFromString( ref string str, ref Vector3 result )
 		{
 			bool success = false;
-			if (DataHelpers.extractOptionalVector3(ref str, ref result))
+			if (DataHelpers.extractRequiredVector3(ref str, ref result))
 			{
-				// Value = result; // FIXME??
+				Value = result; // FIXME??
 				success = true;
 			}
 			else

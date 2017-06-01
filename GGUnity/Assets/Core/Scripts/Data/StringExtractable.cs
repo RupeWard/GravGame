@@ -324,6 +324,7 @@ namespace RJWS.Core.Data
 			{
 				foreach (TEmbedded t in target._list)
 				{
+					Debug.LogError( t.ToString( ));
 					itemExtractable = new T( );
 					itemExtractable.Value = t;
 					itemExtractable.AddToString( sb );
