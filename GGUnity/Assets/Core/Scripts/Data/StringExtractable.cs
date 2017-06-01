@@ -324,6 +324,7 @@ namespace RJWS.Core.Data
 			{
 				foreach (TEmbedded t in target._list)
 				{
+					itemExtractable = new T( );
 					itemExtractable.Value = t;
 					itemExtractable.AddToString( sb );
 				}
@@ -352,6 +353,7 @@ namespace RJWS.Core.Data
 				{
 					for (int i = 0; i < num; i++)
 					{
+						itemExtractable = new T( );
 						if (itemExtractable.ExtractOptionalFromString(ref str))
 						{
 							newList.Add( itemExtractable.Value );
