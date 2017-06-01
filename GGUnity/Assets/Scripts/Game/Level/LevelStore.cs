@@ -128,6 +128,43 @@ namespace RJWS.GravGame
 			}
 			return result;
 		}
+		
+		public LevelDefinition GetNext(LevelDefinition ld)
+		{
+			bool doNext = false;
+			LevelDefinition first = null;
+			foreach( KeyValuePair< int, LevelDefinition> kvp in _levels )
+			{
+				if (first == null)
+				{
+					first = kvp.Value;
+				}
+				if (ld == null)
+				{
+					return kvp.Value;
+				}
+				if (kvp.Value == ld )
+				{
+					doNext = true;
+				}
+				else
+				{
+					if (doNext)
+					{
+						return kvp.Value;
+					}
+				}
+			}
+			if (doNext)
+			{
+				return first;
+			}
+			else
+			{
+				Debug.LogError( "Couldn't find in list: " + ld.DebugDescribe( ) );
+				return null;
+			}
+		}
 
 		private LevelDefinition GetLevelFromId(int id)
 		{

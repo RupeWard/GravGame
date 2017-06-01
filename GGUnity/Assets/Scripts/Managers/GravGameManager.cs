@@ -10,5 +10,19 @@ namespace RJWS.GravGame
 		{
 			LevelStore.CreateInstance( ); 
 		}
+
+		private LevelDefinition _currentLevel = null;
+		public LevelDefinition currentLevel
+		{
+			get
+			{
+				return _currentLevel;
+			}
+			set
+			{
+				_currentLevel = value;
+			}
+		}
+
 	}
 }
