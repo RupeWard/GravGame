@@ -91,6 +91,7 @@ namespace RJWS.GravGame
 			bool success = false;
 			if (DataHelpers.extractRequiredVector3(ref str, ref result))
 			{
+				SetFromVector3( result );
 				Value = result; // FIXME??
 				success = true;
 			}
