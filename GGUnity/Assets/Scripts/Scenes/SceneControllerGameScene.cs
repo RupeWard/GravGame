@@ -28,6 +28,15 @@ public class SceneControllerGameScene : SceneController_Base
 		levelText.text = RJWS.GravGame.GravGameManager.Instance.currentLevel.levelName;
 		_levelHandler = new RJWS.GravGame.LevelHandler( RJWS.GravGame.GravGameManager.Instance.currentLevel );
 		_levelHandler.SetUpLevel( );
+		_levelHandler.StartGame( );
+	}
+
+	void Update()
+	{
+		if (_levelHandler != null)
+		{
+			_levelHandler.update(Time.deltaTime );
+		}
 	}
 
 	public void QuitScene()

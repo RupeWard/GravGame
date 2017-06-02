@@ -10,12 +10,22 @@ namespace RJWS.GravGame
 	{
 		private LevelDefinition _levelDef = null;
 		private Transform blockContainer = null;
+		private IBlockSequencer _blockSequencer = null;
 
 		public LevelHandler (LevelDefinition ld)
 		{
 			_levelDef = ld;
 			blockContainer = GameObject.Find( "3DWorld" ).transform;
 		}
+
+		public void StartGame()
+		{
+			_blockSequencer = _levelDef.GetBlockSequencer( );
+		}
+
+		private Block _currentSelectedBlock = null;
+
+		private Transform spawnPoint;
 
 		public void SetUpLevel()
 		{
@@ -32,6 +42,34 @@ namespace RJWS.GravGame
 				{
 					_staticBlocks.Add( newBlock );
 					Debug.Log( "Created static block from " + bd.DebugDescribe( ) );
+				}
+			}
+			if (spawnPoint == null)
+			{
+				spawnPoint = new GameObject( "SpawnPoint" ).transform;
+				spawnPoint.SetParent( blockContainer, false );
+			}
+			// TODO SET UP SPAWN POINT REL TO VIEW
+			spawnPoint.localPosition = new Vector3( 0f, 4f, 0f );
+		}
+
+		public void update(float deltaTime)
+		{
+			if (_currentSelectedBlock == null)
+			{
+				if (_blockSequencer == null)
+				{
+
+				}
+				else if (_blockSequencer.IsFinished())
+				{
+					// end game
+				}
+				else
+				{
+					Shape.AbstractShapeDefn shapeDefn = _blockSequencer.GetNextShapeDefn( );
+					BlockDefinition blockDefn = new BlockDefinition( new Vector3( spawnPoint.localPosition.x, spawnPoint.localPosition.y, 0f ), shapeDefn);
+					_currentSelectedBlock = BlockFactory.Instance.CreateSelectedBlock(blockContainer, blockDefn) ;
 				}
 			}
 		}

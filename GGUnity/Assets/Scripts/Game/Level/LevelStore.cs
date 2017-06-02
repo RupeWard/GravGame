@@ -51,8 +51,23 @@ namespace RJWS.GravGame
 
 		private void AddTestDefns()
 		{
-			if (_levels.Count < 3 )
+//			if (_levels.Count < 3 )
 			{
+				if (GetLevelFromName( "L0" ) != null)
+				{
+					Debug.LogWarning( "Not overrwiting L0" );
+				}
+				else
+				{
+					LevelDefinition level = new LevelDefinition( 2, "L0" );
+					level.tmpShapeDefn = new Shape.CircleShapeDefn( 0.2f );
+					level.AddInitialStaticBlock( new BlockDefinition( new Vector3( -1f, -2f, 0f ), new Shape.RectShapeDefn( new Vector2( 2.5f, 0.25f ) ) ) );
+					level.AddInitialStaticBlock( new BlockDefinition( new Vector3( 1.5f, -1f, 0f ), new Shape.RectShapeDefn( new Vector2( 1.5f, 0.25f ) ) ) );
+
+					AddDefnWithNextHighId( level );
+				}
+
+				/*
 				if (GetLevelFromName("L0") != null)
 				{
 					Debug.LogWarning( "Not overrwiting L0" );
@@ -78,20 +93,7 @@ namespace RJWS.GravGame
 
 					AddDefnWithNextHighId( level1 );
 				}
-
-				if (GetLevelFromName( "L2" ) != null)
-				{
-					Debug.LogWarning( "Not overrwiting L2" );
-				}
-				else
-				{
-					LevelDefinition level2 = new LevelDefinition( 2, "L2" );
-					level2.tmpShapeDefn = new Shape.CircleShapeDefn( 2f );
-					level2.AddInitialStaticBlock( new BlockDefinition( Vector3.zero, new Shape.RectShapeDefn( new Vector2( 3f, 0.5f ) ) ) );
-					level2.AddInitialStaticBlock( new BlockDefinition( new Vector3( 1f, 2f, 0f ), new Shape.RectShapeDefn( new Vector2( 2f, 0.5f ) ) ) );
-
-					AddDefnWithNextHighId( level2 );
-				}
+				*/
 
 				if (DEBUG_LevelStore)
 				{

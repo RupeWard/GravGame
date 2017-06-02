@@ -147,6 +147,8 @@ namespace RJWS.Core.Data
 			return (ExtractFromString( ref str, true));
 		}
 
+		private static readonly bool DEBUG_Parsing = false;
+
 		public bool ExtractFromString( ref string str, bool required )
 		{
 			bool success = false;
@@ -169,8 +171,11 @@ namespace RJWS.Core.Data
 
 					//Found first. Now search forward for matching
 
-					Debug.Log( "Found " + sep0 + " at start of " + str );
-
+					if (DEBUG_Parsing)
+					{
+						Debug.Log( "Found " + sep0 + " at start of " + str );
+					}
+	
 					int index = sep0.Length;
 
 					string contentString = string.Empty;
@@ -181,7 +186,10 @@ namespace RJWS.Core.Data
 						string testString = str.Substring( index, sep1.Length );
 						if (testString.StartsWith( sep0 ))
 						{
-							Debug.Log( "Found " + sep0 + " at " + index + " (" + numNestedNotMatched + ")" );
+							if (DEBUG_Parsing)
+							{
+								Debug.Log( "Found " + sep0 + " at " + index + " (" + numNestedNotMatched + ")" );
+							}
 							numNestedNotMatched++;
 							index = index + sep0.Length;
 						}
@@ -189,7 +197,10 @@ namespace RJWS.Core.Data
 						{
 							if (numNestedNotMatched > 0)
 							{
-								Debug.Log( "Found " + sep1 + " at " + index + " (" + numNestedNotMatched + ")" );
+								if (DEBUG_Parsing)
+								{
+									Debug.Log( "Found " + sep1 + " at " + index + " (" + numNestedNotMatched + ")" );
+								}
 								numNestedNotMatched--;
 								index = index + sep1.Length;
 							}
@@ -223,7 +234,10 @@ namespace RJWS.Core.Data
 									{
 										msg = msg + "\n" + dd.DebugDescribe( );
 									}
-									Debug.Log( msg );
+									if (DEBUG_Parsing)
+									{
+										Debug.Log( msg );
+									}
 									success = true;
 								}
 								else

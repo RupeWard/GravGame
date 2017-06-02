@@ -56,6 +56,14 @@ namespace RJWS.GravGame
 			levelName = n;
 		}
 
+		public IBlockSequencer GetBlockSequencer()
+		{
+			// TODO - list of shapes, with freqs
+			StandardBlockSequencer result = new StandardBlockSequencer( );
+			result.AddShapeToList( tmpShapeDefn, 1f );
+			return result;
+		}
+
 		#region AbstractStringExtractable
 
 		override protected bool _extractFromString( ref string str, ref LevelDefinition result)

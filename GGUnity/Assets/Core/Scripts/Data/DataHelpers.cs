@@ -368,9 +368,6 @@ namespace RJWS.Core.Data
 		static public bool extractBool( ref string str, ref bool v, bool required )
 		{
 			bool success = false;
-			System.Text.RegularExpressions.Regex regex =
-				new System.Text.RegularExpressions.Regex( @"^(\d+)" );
-//			System.Text.RegularExpressions.Match match = regex.Match( str );
 			if (str.StartsWith(true.ToString()))
 			{
 				v = true;

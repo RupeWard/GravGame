@@ -85,7 +85,7 @@ namespace RJWS.GravGame
 			}
 			if (_blockPositionInfo.ExtractOptionalFromString(ref str ))
 			{
-				Debug.LogError( _blockPositionInfo.DebugDescribe( ) );
+//				Debug.LogError( _blockPositionInfo.DebugDescribe( ) );
 
 				result._blockPositionInfo.Value = _blockPositionInfo.info;
 				Shape.AbstractShapeDefn asd=null;

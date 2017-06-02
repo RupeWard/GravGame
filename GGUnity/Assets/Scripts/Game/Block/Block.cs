@@ -64,7 +64,7 @@ namespace RJWS.GravGame
 		{
 			SetLayer( "Effects" );
 			cachedRB.isKinematic = true;
-			cachedRB.constraints = RigidbodyConstraints.None;
+			cachedRB.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY;
 			SetMaterial( mat );
 		}
 
