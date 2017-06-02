@@ -12,6 +12,10 @@ namespace RJWS.GravGame
 		private static readonly bool DEBUG_BlockPositionInfo = true;
 
 		private Vector3 _info = Vector3.zero;
+		public Vector3 info
+		{
+			get { return _info; }
+		}
 
 		public Vector2 position
 		{
@@ -77,6 +81,7 @@ namespace RJWS.GravGame
 
 		protected override bool _addToString( Vector3 target, System.Text.StringBuilder sb )
 		{
+			Debug.LogError( "target = " + target+" value = "+Value );
 			sb.Append( target.ToString( ) );
 			return true;
 		}

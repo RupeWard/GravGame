@@ -54,6 +54,7 @@ namespace RJWS.GravGame
 			if (target == null)
 			{
 				target = this;
+				Debug.LogError( "target=this" );
 			}
 			if (target._shapeDefinition == null)
 			{
@@ -61,12 +62,10 @@ namespace RJWS.GravGame
 			}
 			else
 			{
-				Debug.LogError( "this = "+this.DebugDescribe( ) 
-					+"\ntarget = "+target.DebugDescribe( ) );
-				target._blockPositionInfo.AddToString( sb );
+				Debug.LogError( target.DebugDescribe( ) );
 
-				Debug.LogError( "this = " + this.DebugDescribe( )
-					+ "\ntarget = " + target.DebugDescribe( ) );
+				target._blockPositionInfo.Value = target._blockPositionInfo.info;
+				target._blockPositionInfo.AddToString(sb );
 
 				_blockPositionInfo.Value = target._blockPositionInfo.Value;
 				_shapeDefinition = target._shapeDefinition;
