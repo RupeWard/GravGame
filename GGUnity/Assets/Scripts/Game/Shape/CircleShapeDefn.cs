@@ -64,8 +64,8 @@ namespace RJWS.GravGame.Shape
 				float angle = angleStep * i;
 				result.Add( 
 					new Vector2( 
-						centre.x + _radius * Mathf.Cos(angle * Mathf.Deg2Rad  ),
-						centre.y + _radius * Mathf.Sin( angle * Mathf.Deg2Rad )
+						centre.x + _radius * Mathf.Cos(angle ),
+						centre.y + _radius * Mathf.Sin( angle  )
                         ));
 			}
 			return result;

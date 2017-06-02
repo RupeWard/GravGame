@@ -62,8 +62,6 @@ namespace RJWS.GravGame
 			}
 			else
 			{
-				Debug.LogError( target.DebugDescribe( ) );
-
 				target._blockPositionInfo.Value = target._blockPositionInfo.info;
 				target._blockPositionInfo.AddToString(sb );
 
