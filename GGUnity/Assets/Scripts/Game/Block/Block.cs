@@ -89,7 +89,7 @@ namespace RJWS.GravGame
 			meshCollider.sharedMaterial = m;
 		}
 
-		static readonly float defaultResolution = 0.1f;
+		static readonly float defaultResolution = 0.05f;
 		static readonly float zDepth = 2f;
 
 		private void CreateMesh()
